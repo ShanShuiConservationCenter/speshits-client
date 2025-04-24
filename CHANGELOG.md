@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.1 (2025-04-24)
+
+### Bug Fixes
+
+- :bug: wrong taxons batch get request method
+  ([`a1b0d93`](https://github.com/simulacraliasing/speshits-client/commit/a1b0d931b1a0ede3214f0d5fe6713bda163b2db3))
+
+
 ## v0.2.0 (2025-04-24)
 
 ### Features
