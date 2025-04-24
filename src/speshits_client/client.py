@@ -105,3 +105,15 @@ class SpeshitsClient:
         if not data["success"]:
             raise Exception(data["message"])
         return data["data"]
+
+    async def get_taxon_by_id(self, taxon_id: str) -> Dict:
+        endpoint = urljoin(self.base_url, f"/v1/taxons/{taxon_id}")
+        await self.refresh_token()
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+        async with httpx.AsyncClient() as client:
+            res = await client.get(url=endpoint, headers=headers)
+        res.raise_for_status()
+        data = res.json()
+        if not data["success"]:
+            raise Exception(data["message"])
+        return data["data"]

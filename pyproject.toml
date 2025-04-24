@@ -14,6 +14,7 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = ["python-semantic-release>=9.21.0"]
 test = ["pytest>=8.3.5", "pytest-asyncio>=0.26.0"]
+
 [tool.semantic_release]
 assets = []
 build_command_env = []
@@ -25,6 +26,7 @@ allow_zero_version = true
 repo_dir = "/home/hinature/hinaturedb/sdks/speshits-client"
 no_git_verify = false
 tag_format = "v{version}"
+version_toml = ["pyproject.toml:project.version"]
 
 [tool.semantic_release.branches.main]
 match = "(main|master)"
@@ -98,4 +100,3 @@ insecure = false
 [tool.semantic_release.publish]
 dist_glob_patterns = []
 upload_to_vcs_release = false
-
