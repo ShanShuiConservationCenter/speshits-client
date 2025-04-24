@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.3.0 (2025-04-24)
+
+### Features
+
+- :sparkles: add single taxon get method
+  ([`db40895`](https://github.com/simulacraliasing/speshits-client/commit/db40895078b3d5217413829f7f3b33f02a36939d))
+
+
 ## v0.2.1 (2025-04-24)
 
 ### Bug Fixes
