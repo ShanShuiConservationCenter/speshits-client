@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.0 (2025-04-24)
+
+### Features
+
+- :sparkles: update batch get taxons by id method
+  ([`325514f`](https://github.com/simulacraliasing/speshits-client/commit/325514f9c9604a17aa15e9399b7de295539e3fcc))
+
+
 ## v0.1.0 (2025-04-23)
 
 ### Features
