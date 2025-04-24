@@ -98,3 +98,4 @@ insecure = false
 [tool.semantic_release.publish]
 dist_glob_patterns = []
 upload_to_vcs_release = false
+

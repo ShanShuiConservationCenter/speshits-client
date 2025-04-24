@@ -94,12 +94,12 @@ class SpeshitsClient:
         return all_taxons
 
     async def get_taxons_by_ids(self, taxon_ids: List[str]) -> List[Dict]:
-        endpoint = urljoin(self.base_url, "/v1/taxons_batch")
+        endpoint = urljoin(self.base_url, "/v1/taxons/batch_get")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        params = {"taxon_ids": taxon_ids}
+        json_data = {"taxon_ids": taxon_ids}
         async with httpx.AsyncClient() as client:
-            res = await client.get(url=endpoint, headers=headers, params=params)
+            res = await client.get(url=endpoint, headers=headers, json=json_data)
         res.raise_for_status()
         data = res.json()
         if not data["success"]:
