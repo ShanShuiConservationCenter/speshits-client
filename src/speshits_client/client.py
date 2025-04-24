@@ -99,7 +99,7 @@ class SpeshitsClient:
         headers = {"Authorization": f"Bearer {self.access_token}"}
         json_data = {"taxon_ids": taxon_ids}
         async with httpx.AsyncClient() as client:
-            res = await client.get(url=endpoint, headers=headers, json=json_data)
+            res = await client.post(url=endpoint, headers=headers, json=json_data)
         res.raise_for_status()
         data = res.json()
         if not data["success"]:
