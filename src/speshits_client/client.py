@@ -3,6 +3,7 @@ from typing import Dict, List, Tuple
 from urllib.parse import urljoin
 
 import httpx
+from httpx import Timeout
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -54,23 +55,23 @@ class SpeshitsClient:
     )
     async def get_taxons_page(
         self,
-        canonicalName: str = None,
-        chineseName: str = None,
+        canonicalName: str | None = None,
+        chineseName: str | None = None,
         page: int = 1,
         page_size: int = 50,
-    ) -> Tuple[int, List[Dict]]:
+    ) -> Tuple[int, List[Dict[str, int | str | None]]]:
         endpoint = urljoin(self.base_url, "/v1/taxons")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         if not canonicalName and not chineseName:
             raise ValueError("Either canonicalName or chineseName must be provided")
-        params = {
+        params: Dict[str, str | int | None] = {
             "canonicalName": canonicalName,
             "chineseName": chineseName,
             "page": page,
             "pageSize": page_size,
         }
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=Timeout(30.0)) as client:
             res = await client.get(url=endpoint, headers=headers, params=params)
         res.raise_for_status()
         data = res.json()
@@ -79,9 +80,11 @@ class SpeshitsClient:
         total = data["total"]
         return total, data["data"]
 
-    async def get_all_taxons(self, canonicalName: str = None, chineseName: str = None):
+    async def get_all_taxons(
+        self, canonicalName: str | None = None, chineseName: str | None = None
+    ):
         page = 1
-        all_taxons = []
+        all_taxons: List[Dict[str, str | int | None]] = []
         while True:
             total, taxons = await self.get_taxons_page(
                 canonicalName, chineseName, page, page_size=1000
@@ -93,12 +96,14 @@ class SpeshitsClient:
 
         return all_taxons
 
-    async def get_taxons_by_ids(self, taxon_ids: List[str]) -> List[Dict]:
+    async def get_taxons_by_ids(
+        self, taxon_ids: List[str]
+    ) -> List[Dict[str, int | str | None]]:
         endpoint = urljoin(self.base_url, "/v1/taxons/batch_get")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         json_data = {"taxon_ids": taxon_ids}
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=Timeout(30.0)) as client:
             res = await client.post(url=endpoint, headers=headers, json=json_data)
         res.raise_for_status()
         data = res.json()
@@ -106,11 +111,11 @@ class SpeshitsClient:
             raise Exception(data["message"])
         return data["data"]
 
-    async def get_taxon_by_id(self, taxon_id: str) -> Dict:
+    async def get_taxon_by_id(self, taxon_id: str) -> Dict[str, str | int | None]:
         endpoint = urljoin(self.base_url, f"/v1/taxons/{taxon_id}")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=Timeout(30.0)) as client:
             res = await client.get(url=endpoint, headers=headers)
         res.raise_for_status()
         data = res.json()
