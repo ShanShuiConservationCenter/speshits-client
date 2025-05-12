@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.3.1 (2025-05-12)
+
+### Performance Improvements
+
+- :zap: add httpx request timeout
+  ([`5eab912`](https://github.com/simulacraliasing/speshits-client/commit/5eab9120500e317277ef36a53cb4847f0b4a815f))
+
+
 ## v0.3.0 (2025-04-24)
 
 ### Features
