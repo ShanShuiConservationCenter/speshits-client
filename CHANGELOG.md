@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.3.2 (2025-05-22)
+
+### Build System
+
+- :arrow_down: tenacity>8.4.0,<9.0.0
+  ([`ad499ba`](https://github.com/simulacraliasing/speshits-client/commit/ad499ba178925c992aa8625a1bc136fdd2acd1ba))
+
+
 ## v0.3.1 (2025-05-12)
 
 ### Performance Improvements
