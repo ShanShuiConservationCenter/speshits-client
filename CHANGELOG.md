@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.3.3 (2025-06-19)
+
+### Performance Improvements
+
+- :zap: reuse http client
+  ([`53e72ea`](https://github.com/simulacraliasing/speshits-client/commit/53e72ead7121c5ec0bf9533d90692541953e331b))
+
+
 ## v0.3.2 (2025-05-22)
 
 ### Build System
