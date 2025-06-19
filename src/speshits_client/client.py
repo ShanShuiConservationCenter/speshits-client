@@ -1,5 +1,4 @@
 import datetime
-from typing import Dict, List, Tuple
 from urllib.parse import urljoin
 
 import httpx
@@ -13,11 +12,17 @@ from tenacity import (
 
 
 class SpeshitsClient:
-    def __init__(self, username: str, password: str):
+    def __init__(
+        self,
+        username: str,
+        password: str,
+        http_client: httpx.AsyncClient = httpx.AsyncClient(),
+    ):
         self.base_url = "https://speshits.hinature.cn"
         self.username = username
         self.password = password
         self.access_token = None
+        self.client = http_client
 
     async def get_token(self):
         token_url = urljoin(self.base_url, "/v1/token")
@@ -26,8 +31,7 @@ class SpeshitsClient:
             "username": self.username,
             "password": self.password,
         }
-        async with httpx.AsyncClient() as client:
-            res = await client.post(token_url, data=payload)
+        res = await self.client.post(token_url, data=payload)
         res.raise_for_status()
         data = res.json()
         expires_in = data["expires_in"]
@@ -59,20 +63,21 @@ class SpeshitsClient:
         chineseName: str | None = None,
         page: int = 1,
         page_size: int = 50,
-    ) -> Tuple[int, List[Dict[str, int | str | None]]]:
+    ) -> tuple[int, list[dict[str, int | str | None]]]:
         endpoint = urljoin(self.base_url, "/v1/taxons")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         if not canonicalName and not chineseName:
             raise ValueError("Either canonicalName or chineseName must be provided")
-        params: Dict[str, str | int | None] = {
+        params: dict[str, str | int | None] = {
             "canonicalName": canonicalName,
             "chineseName": chineseName,
             "page": page,
             "pageSize": page_size,
         }
-        async with httpx.AsyncClient(timeout=Timeout(30.0)) as client:
-            res = await client.get(url=endpoint, headers=headers, params=params)
+        res = await self.client.get(
+            url=endpoint, headers=headers, params=params, timeout=Timeout(30.0)
+        )
         res.raise_for_status()
         data = res.json()
         if not data["success"]:
@@ -84,7 +89,7 @@ class SpeshitsClient:
         self, canonicalName: str | None = None, chineseName: str | None = None
     ):
         page = 1
-        all_taxons: List[Dict[str, str | int | None]] = []
+        all_taxons: list[dict[str, str | int | None]] = []
         while True:
             total, taxons = await self.get_taxons_page(
                 canonicalName, chineseName, page, page_size=1000
@@ -97,26 +102,28 @@ class SpeshitsClient:
         return all_taxons
 
     async def get_taxons_by_ids(
-        self, taxon_ids: List[str]
-    ) -> List[Dict[str, int | str | None]]:
+        self, taxon_ids: list[str]
+    ) -> list[dict[str, int | str | None]]:
         endpoint = urljoin(self.base_url, "/v1/taxons/batch_get")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         json_data = {"taxon_ids": taxon_ids}
-        async with httpx.AsyncClient(timeout=Timeout(30.0)) as client:
-            res = await client.post(url=endpoint, headers=headers, json=json_data)
+        res = await self.client.post(
+            url=endpoint, headers=headers, json=json_data, timeout=Timeout(30.0)
+        )
         res.raise_for_status()
         data = res.json()
         if not data["success"]:
             raise Exception(data["message"])
         return data["data"]
 
-    async def get_taxon_by_id(self, taxon_id: str) -> Dict[str, str | int | None]:
+    async def get_taxon_by_id(self, taxon_id: str) -> dict[str, str | int | None]:
         endpoint = urljoin(self.base_url, f"/v1/taxons/{taxon_id}")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        async with httpx.AsyncClient(timeout=Timeout(30.0)) as client:
-            res = await client.get(url=endpoint, headers=headers)
+        res = await self.client.get(
+            url=endpoint, headers=headers, timeout=Timeout(30.0)
+        )
         res.raise_for_status()
         data = res.json()
         if not data["success"]:
