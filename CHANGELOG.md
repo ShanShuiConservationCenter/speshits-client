@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.0 (2025-06-23)
+
+### Features
+
+- :sparkles: add iucn cnpw get method
+  ([`ff69448`](https://github.com/simulacraliasing/speshits-client/commit/ff69448fbdde4939609b166938020b653920ce47))
+
+
 ## v0.3.3 (2025-06-19)
 
 ### Performance Improvements
