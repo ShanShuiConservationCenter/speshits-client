@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.1 (2025-06-23)
+
+### Performance Improvements
+
+- :zap: add retry
+  ([`97c5c5d`](https://github.com/simulacraliasing/speshits-client/commit/97c5c5dac439891413b1d5716f21fd4dd8fbc6dd))
+
+
 ## v0.4.0 (2025-06-23)
 
 ### Features
