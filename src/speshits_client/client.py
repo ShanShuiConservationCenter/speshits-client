@@ -129,3 +129,35 @@ class SpeshitsClient:
         if not data["success"]:
             raise Exception(data["message"])
         return data["data"]
+
+    async def get_taxon_iucn(self, canonical_name: str) -> list[str]:
+        endpoint = urljoin(self.base_url, "/v1/taxon_iucn")
+        await self.refresh_token()
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+        res = await self.client.get(
+            url=endpoint,
+            headers=headers,
+            params={"canonicalName": canonical_name},
+            timeout=Timeout(30.0),
+        )
+        res.raise_for_status()
+        data = res.json()
+        if not data["success"]:
+            raise Exception(data["message"])
+        return data["data"]
+
+    async def get_taxon_cnpw(self, canonical_name: str) -> list[str]:
+        endpoint = urljoin(self.base_url, "/v1/taxon_cnpw_level")
+        await self.refresh_token()
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+        res = await self.client.get(
+            url=endpoint,
+            headers=headers,
+            params={"canonicalName": canonical_name},
+            timeout=Timeout(30.0),
+        )
+        res.raise_for_status()
+        data = res.json()
+        if not data["success"]:
+            raise Exception(data["message"])
+        return data["data"]
