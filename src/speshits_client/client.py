@@ -117,6 +117,16 @@ class SpeshitsClient:
             raise Exception(data["message"])
         return data["data"]
 
+    @retry(
+        stop=stop_after_attempt(3),  # Retry up to 3 times
+        wait=wait_exponential(
+            multiplier=3, min=2, max=10
+        ),  # Wait 2s, 4s, 8s... up to 10s
+        retry=retry_if_exception_type(
+            (httpx.ReadTimeout, httpx.ConnectTimeout, httpx.ConnectError)
+        ),  # Retry on these specific errors
+        reraise=True,  # Reraise the exception if all retries fail
+    )
     async def get_taxon_by_id(self, taxon_id: str) -> dict[str, str | int | None]:
         endpoint = urljoin(self.base_url, f"/v1/taxons/{taxon_id}")
         await self.refresh_token()
@@ -130,6 +140,16 @@ class SpeshitsClient:
             raise Exception(data["message"])
         return data["data"]
 
+    @retry(
+        stop=stop_after_attempt(3),  # Retry up to 3 times
+        wait=wait_exponential(
+            multiplier=3, min=2, max=10
+        ),  # Wait 2s, 4s, 8s... up to 10s
+        retry=retry_if_exception_type(
+            (httpx.ReadTimeout, httpx.ConnectTimeout, httpx.ConnectError)
+        ),  # Retry on these specific errors
+        reraise=True,  # Reraise the exception if all retries fail
+    )
     async def get_taxon_iucn(self, canonical_name: str) -> list[str]:
         endpoint = urljoin(self.base_url, "/v1/taxon_iucn")
         await self.refresh_token()
@@ -146,6 +166,16 @@ class SpeshitsClient:
             raise Exception(data["message"])
         return data["data"]
 
+    @retry(
+        stop=stop_after_attempt(3),  # Retry up to 3 times
+        wait=wait_exponential(
+            multiplier=3, min=2, max=10
+        ),  # Wait 2s, 4s, 8s... up to 10s
+        retry=retry_if_exception_type(
+            (httpx.ReadTimeout, httpx.ConnectTimeout, httpx.ConnectError)
+        ),  # Retry on these specific errors
+        reraise=True,  # Reraise the exception if all retries fail
+    )
     async def get_taxon_cnpw(self, canonical_name: str) -> list[str]:
         endpoint = urljoin(self.base_url, "/v1/taxon_cnpw_level")
         await self.refresh_token()
