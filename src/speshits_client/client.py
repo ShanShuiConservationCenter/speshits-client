@@ -16,9 +16,10 @@ class SpeshitsClient:
         self,
         username: str,
         password: str,
+        base_url: str = "https://speshits.hinature.cn",
         http_client: httpx.AsyncClient = httpx.AsyncClient(),
     ):
-        self.base_url = "https://speshits.hinature.cn"
+        self.base_url = base_url
         self.username = username
         self.password = password
         self.access_token = None
