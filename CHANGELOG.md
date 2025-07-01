@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.2 (2025-07-01)
+
+### Performance Improvements
+
+- :zap: add base_url parameter
+  ([`dbe5c98`](https://github.com/simulacraliasing/speshits-client/commit/dbe5c9847b179b2d5d63b0d3b0c1d236493fd07d))
+
+
 ## v0.4.1 (2025-06-23)
 
 ### Performance Improvements
