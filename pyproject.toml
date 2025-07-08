@@ -1,6 +1,6 @@
 [project]
 name = "speshits-client"
-version = "0.4.2"
+version = "0.4.3"
 description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Zhengyi Dong", email = "dongzhengyi@shanshui.org" }]

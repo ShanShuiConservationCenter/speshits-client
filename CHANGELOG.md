@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.3 (2025-07-08)
+
+### Performance Improvements
+
+- :zap: add traversal param to get_taxon_by_id
+  ([`54d7dc1`](https://github.com/simulacraliasing/speshits-client/commit/54d7dc1f5f0151856f0d5fb06d42b29e836f66c3))
+
+
 ## v0.4.2 (2025-07-01)
 
 ### Performance Improvements
