@@ -128,12 +128,12 @@ class SpeshitsClient:
         ),  # Retry on these specific errors
         reraise=True,  # Reraise the exception if all retries fail
     )
-    async def get_taxon_by_id(self, taxon_id: str) -> dict[str, str | int | None]:
+    async def get_taxon_by_id(self, taxon_id: str, traversal: bool = False) -> dict[str, str | int | None]:
         endpoint = urljoin(self.base_url, f"/v1/taxons/{taxon_id}")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         res = await self.client.get(
-            url=endpoint, headers=headers, timeout=Timeout(30.0)
+            url=endpoint, headers=headers,params={"traversal": traversal}, timeout=Timeout(30.0)
         )
         res.raise_for_status()
         data = res.json()
