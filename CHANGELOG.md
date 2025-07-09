@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.4 (2025-07-09)
+
+### Performance Improvements
+
+- :zap: add traversal to batch taxon get
+  ([`dc5cede`](https://github.com/simulacraliasing/speshits-client/commit/dc5cedea66429972acc5eac1d33684a7983b137e))
+
+
 ## v0.4.3 (2025-07-08)
 
 ### Performance Improvements
