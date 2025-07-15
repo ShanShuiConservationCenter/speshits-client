@@ -12,7 +12,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = ["python-semantic-release>=9.21.0"]
+dev = [
+    "pandas>=2.3.1",
+    "python-semantic-release>=9.21.0",
+]
 test = ["pytest>=8.3.5", "pytest-asyncio>=0.26.0"]
 
 [tool.semantic_release]

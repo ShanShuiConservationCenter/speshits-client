@@ -1,4 +1,5 @@
 import datetime
+from typing import Any
 from urllib.parse import urljoin
 
 import httpx
@@ -58,14 +59,14 @@ class SpeshitsClient:
         ),  # Retry on these specific errors
         reraise=True,  # Reraise the exception if all retries fail
     )
-    async def get_taxons_page(
+    async def search_taxons(
         self,
         canonicalName: str | None = None,
         chineseName: str | None = None,
         page: int = 1,
         page_size: int = 50,
     ) -> tuple[int, list[dict[str, int | str | None]]]:
-        endpoint = urljoin(self.base_url, "/v1/taxons")
+        endpoint = urljoin(self.base_url, "/v1/taxons/search")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         if not canonicalName and not chineseName:
@@ -86,13 +87,13 @@ class SpeshitsClient:
         total = data["total"]
         return total, data["data"]
 
-    async def get_all_taxons(
+    async def search_all_taxons(
         self, canonicalName: str | None = None, chineseName: str | None = None
     ):
         page = 1
         all_taxons: list[dict[str, str | int | None]] = []
         while True:
-            total, taxons = await self.get_taxons_page(
+            total, taxons = await self.search_taxons(
                 canonicalName, chineseName, page, page_size=1000
             )
             all_taxons.extend(taxons)
@@ -105,15 +106,15 @@ class SpeshitsClient:
     async def get_taxons_by_ids(
         self, taxon_ids: list[str], traversal: bool = False
     ) -> list[dict[str, int | str | None]]:
-        endpoint = urljoin(self.base_url, "/v1/taxons/batch_get")
+        endpoint = urljoin(self.base_url, "/v1/taxons/batch")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        json_data: dict[str, list[str] | bool] = {
+        params: dict[str, list[str] | bool] = {
             "taxon_ids": taxon_ids,
             "traversal": traversal,
         }
-        res = await self.client.post(
-            url=endpoint, headers=headers, json=json_data, timeout=Timeout(30.0)
+        res = await self.client.get(
+            url=endpoint, headers=headers, params=params, timeout=Timeout(30.0)
         )
         res.raise_for_status()
         data = res.json()
@@ -133,14 +134,14 @@ class SpeshitsClient:
     )
     async def get_taxon_by_id(
         self, taxon_id: str, traversal: bool = False
-    ) -> dict[str, str | int | None]:
-        endpoint = urljoin(self.base_url, f"/v1/taxons/{taxon_id}")
+    ) -> dict[str, str | int | None] | None:
+        endpoint = urljoin(self.base_url, "/v1/taxons")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         res = await self.client.get(
             url=endpoint,
             headers=headers,
-            params={"traversal": traversal},
+            params={"taxon_id": taxon_id, "traversal": traversal},
             timeout=Timeout(30.0),
         )
         res.raise_for_status()
@@ -160,7 +161,7 @@ class SpeshitsClient:
         reraise=True,  # Reraise the exception if all retries fail
     )
     async def get_taxon_iucn(self, canonical_name: str) -> list[str]:
-        endpoint = urljoin(self.base_url, "/v1/taxon_iucn")
+        endpoint = urljoin(self.base_url, "/v1/taxons/iucn")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         res = await self.client.get(
@@ -186,7 +187,7 @@ class SpeshitsClient:
         reraise=True,  # Reraise the exception if all retries fail
     )
     async def get_taxon_cnpw(self, canonical_name: str) -> list[str]:
-        endpoint = urljoin(self.base_url, "/v1/taxon_cnpw_level")
+        endpoint = urljoin(self.base_url, "/v1/taxons/cnpw")
         await self.refresh_token()
         headers = {"Authorization": f"Bearer {self.access_token}"}
         res = await self.client.get(
@@ -200,3 +201,24 @@ class SpeshitsClient:
         if not data["success"]:
             raise Exception(data["message"])
         return data["data"]
+
+    async def create_taxon(self, taxon: dict[str, Any]) -> str:
+        endpoint = urljoin(self.base_url, "/v1/taxons")
+        await self.refresh_token()
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+        res = await self.client.post(
+            url=endpoint, headers=headers, json=taxon, timeout=Timeout(30.0)
+        )
+        res.raise_for_status()
+        data = res.json()
+        if not data["success"]:
+            raise Exception(data["message"])
+        return data["data"]
+
+    async def batch_create_taxons(self, taxons: list[dict[str, Any]]):
+        # todo
+        ...
+    
+    async def update_taxon(self, taxon_id: str, taxon: dict[str, Any]):
+        # todo
+        ...
